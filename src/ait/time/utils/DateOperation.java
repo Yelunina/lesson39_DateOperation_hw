@@ -7,17 +7,23 @@ import java.util.Arrays;
 
 public class DateOperation {
     public static int getAge(String birthDate) {
-        LocalDate date = stringConvertToLocalDate(birthDate);
+        LocalDate date = parseDate(birthDate);
         return (int) ChronoUnit.YEARS.between(date, LocalDate.now());
     }
 
     public static String[] sortStringDates(String[] dates) {
         String[] res = Arrays.copyOf(dates, dates.length);
-        Arrays.sort(res, (d1, d2) -> stringConvertToLocalDate(d1).compareTo(stringConvertToLocalDate(d2)));
+        Arrays.sort(res, (d1, d2) -> parseDate(d1).compareTo(parseDate(d2)));
         return res;
     }
-    private static LocalDate stringConvertToLocalDate(String stringDate) {
-        return LocalDate.parse(stringDate, DateTimeFormatter.ofPattern("[dd/MM/yyyy][yyyy-MM-dd]"));
+
+    private static LocalDate parseDate(String date) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        if (date.contains("-")) {
+            return LocalDate.parse(date);
+        } else {
+            return LocalDate.parse(date, df);
+        }
     }
 
 }
